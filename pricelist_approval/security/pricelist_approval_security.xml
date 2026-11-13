@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="group_pricelist_approver" model="res.groups">
+        <field name="name">Pricelist Approver</field>
+        <field name="category_id" ref="base.module_category_sales_sales"/>
+        <field name="implied_ids" eval="[Command.link(ref('base.group_user'))]"/>
+        <field name="comment">Can approve or reject changes to pricelists and pricelist rules. Their own changes apply without approval.</field>
+    </record>
+
+    <record id="pricelist_change_request_rule_company" model="ir.rule">
+        <field name="name">Pricelist Change Request: multi-company</field>
+        <field name="model_id" ref="model_pricelist_change_request"/>
+        <field name="domain_force">[('company_id', 'in', company_ids)]</field>
+    </record>
+</odoo>

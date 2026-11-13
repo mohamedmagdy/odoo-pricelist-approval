@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pricelist_change_request_view_list" model="ir.ui.view">
+        <field name="name">pricelist.change.request.list</field>
+        <field name="model">pricelist.change.request</field>
+        <field name="arch" type="xml">
+            <list create="0" delete="0">
+                <field name="name"/>
+                <field name="pricelist_id"/>
+                <field name="res_model"/>
+                <field name="resource_name"/>
+                <field name="requested_by" widget="many2one_avatar_user"/>
+                <field name="create_date" string="Requested On"/>
+                <field name="company_id" groups="base.group_multi_company" optional="hide"/>
+                <field name="state" widget="badge"
+                       decoration-warning="state == 'pending'"
+                       decoration-success="state == 'approved'"
+                       decoration-danger="state == 'rejected'"/>
+            </list>
+        </field>
+    </record>
+
+    <record id="pricelist_change_request_view_form" model="ir.ui.view">
+        <field name="name">pricelist.change.request.form</field>
+        <field name="model">pricelist.change.request</field>
+        <field name="arch" type="xml">
+            <form create="0" delete="0" edit="0">
+                <header>
+                    <button name="action_approve" type="object" string="Approve" class="btn-primary"
+                            invisible="state != 'pending'"
+                            groups="pricelist_approval.group_pricelist_approver"/>
+                    <button name="action_reject" type="object" string="Reject"
+                            invisible="state != 'pending'"
+                            groups="pricelist_approval.group_pricelist_approver"/>
+                    <field name="state" widget="statusbar" statusbar_visible="pending,approved"/>
+                </header>
+                <sheet>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="pricelist_id"/>
+                            <field name="res_model"/>
+                            <field name="resource_name"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                        <group>
+                            <field name="requested_by" widget="many2one_avatar_user"/>
+                            <field name="create_date" string="Requested On"/>
+                            <field name="reviewed_by" widget="many2one_avatar_user" invisible="not reviewed_by"/>
+                            <field name="review_date" invisible="not review_date"/>
+                        </group>
+                    </group>
+                    <group string="Rejection Reason" invisible="state != 'rejected'">
+                        <field name="rejection_reason" nolabel="1" colspan="2"/>
+                    </group>
+                    <separator string="Requested Changes"/>
+                    <field name="change_summary"/>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+
+    <record id="pricelist_change_request_view_search" model="ir.ui.view">
+        <field name="name">pricelist.change.request.search</field>
+        <field name="model">pricelist.change.request</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <field name="pricelist_id"/>
+                <field name="requested_by"/>
+                <filter name="pending" string="Pending" domain="[('state', '=', 'pending')]"/>
+                <filter name="my_requests" string="My Requests" domain="[('requested_by', '=', uid)]"/>
+                <separator/>
+                <filter name="group_by_pricelist" string="Pricelist" context="{'group_by': 'pricelist_id'}"/>
+                <filter name="group_by_state" string="Status" context="{'group_by': 'state'}"/>
+                <filter name="group_by_requested_by" string="Requested By" context="{'group_by': 'requested_by'}"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="pricelist_change_request_action" model="ir.actions.act_window">
+        <field name="name">Pricelist Change Requests</field>
+        <field name="res_model">pricelist.change.request</field>
+        <field name="view_mode">list,form</field>
+        <field name="context">{'search_default_pending': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">No change is waiting for approval</p>
+            <p>Requests appear here when a user edits a pricelist or one of its rules.</p>
+        </field>
+    </record>
+
+    <menuitem id="pricelist_change_request_menu"
+              name="Pricelist Change Requests"
+              parent="sale.product_menu_catalog"
+              action="pricelist_change_request_action"
+              groups="product.group_product_pricelist"
+              sequence="40"/>
+</odoo>

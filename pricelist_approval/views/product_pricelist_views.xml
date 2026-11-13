@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_pricelist_view_form" model="ir.ui.view">
+        <field name="name">product.pricelist.form.inherit.pricelist.approval</field>
+        <field name="model">product.pricelist</field>
+        <field name="inherit_id" ref="product.product_pricelist_view"/>
+        <field name="arch" type="xml">
+            <sheet position="before">
+                <div class="alert alert-warning mb-0" role="alert"
+                     invisible="pending_change_request_count == 0">
+                    <field name="pending_change_request_count" class="fw-bold"/>
+                    change(s) to this pricelist or its rules are waiting for approval and are not applied yet.
+                    <button name="action_open_pending_change_requests" type="object"
+                            string="View" class="btn-link p-0 align-baseline"/>
+                </div>
+            </sheet>
+        </field>
+    </record>
+</odoo>

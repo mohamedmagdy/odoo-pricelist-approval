@@ -1,0 +1,21 @@
+{
+    'name': 'Pricelist Approval',
+    'version': '18.0.1.0.0',
+    'category': 'Sales/Sales',
+    'summary': 'Hold changes to pricelists and pricelist rules until an approver accepts them',
+    'author': 'Mohamed Magdy',
+    'website': 'https://github.com/mohamedmagdy/odoo-pricelist-approval',
+    'license': 'LGPL-3',
+    'depends': ['sale'],
+    'data': [
+        'security/pricelist_approval_security.xml',
+        'security/ir.model.access.csv',
+        'data/ir_sequence_data.xml',
+        'data/mail_activity_type_data.xml',
+        'wizard/pricelist_change_request_reject_views.xml',
+        'views/pricelist_change_request_views.xml',
+        'views/product_pricelist_views.xml',
+        'views/res_config_settings_views.xml',
+    ],
+    'installable': True,
+}
