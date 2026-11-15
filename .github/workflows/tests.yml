@@ -27,8 +27,9 @@ jobs:
         run: |
           docker run --rm --network host \
             -v "$PWD":/mnt/extra-addons:ro \
+            -e HOST=localhost -e USER=odoo -e PASSWORD=odoo \
             odoo:18.0 \
-            odoo --db_host=localhost --db_user=odoo --db_password=odoo \
+            odoo \
               -d test_db -i pricelist_approval \
               --test-tags /pricelist_approval \
               --stop-after-init --no-http --without-demo=all
